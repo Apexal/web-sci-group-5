@@ -1,3 +1,4 @@
+const debug = require('debug')('mongo');
 const { connect } = require('mongoose');
 
 module.exports = async () => {
@@ -7,9 +8,9 @@ module.exports = async () => {
       useUnifiedTopology: true
     });
 
-    console.log('Connected to MongoDB');
+    debug('Connected to MongoDB');
   } catch (err) {
-    console.error(err.message);
+    debug(err.message);
     process.exit(1);
   }
 }
