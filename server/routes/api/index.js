@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-router.use('/api', require('./api'))
+const API_VERSION = '1';
 
-router.get('/ping', (req, res) => {
-    res.send('pong');
+router.get('/version', (req, res) => {
+    res.send(API_VERSION);
 });
 
 module.exports = router;
