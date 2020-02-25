@@ -10,5 +10,11 @@ const port = process.env.PORT || 5000;
 app.use(helmet()); // Setting HTTP headers for security
 app.use(express.json()); // Let Express parse JSON request bodies
 
+app.use((req, res, next) => {
+    next();
+});
+
+app.use(require('./routes'));
+
 app.listen(port, () => debug(`Server running on port ${port}: http://localhost:${port}`));
 connectToMongoDB();
