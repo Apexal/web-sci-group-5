@@ -7,4 +7,6 @@ router.get('/version', (req, res) => {
     res.send(API_VERSION);
 });
 
+router.use('/textbooks', require('./textbooks'));
+
 module.exports = router;
