@@ -1,21 +1,37 @@
 const express = require('express');
 const router = express.Router();
 
-const CASAuthentication = require('cas-authentication');
+const passport = require('passport');
+const CasStrategy = require('passport-cas2').Strategy;
 
-const cas = new CASAuthentication({
-  cas_url: 'https://cas-auth.rpi.edu/cas',
-  cas_version: '3.0',
-  service_url: process.env.CAS_SERVICE_URL
+const cas = new CasStrategy({
+  casURL: 'https://cas-auth.rpi.edu/cas',
+},
+  function (username, profile, done) {
+    // TODO: find or create Student from username
+    username = username.toLowerCase();
+
+    done(null, { username });
+  }
+);
+
+passport.use(cas);
+
+router.get('/login', passport.authenticate('cas'), function (req, res) {
+  res.redirect('/success');
+})
+
+router.get('/logout', function (req, res) {
+  var returnURL = 'http://localhost:5000';
+  cas.logout(req, res, returnURL);
 });
 
-function studentPostLogin (req, res) {
-  // Do things...
-  res.redirect('/');
-}
+passport.serializeUser(function(user, done) {
+  done(null, user.username);
+});
 
-/* CAS Authentication */
-router.get('/login', cas.bounce, studentPostLogin);
-router.get('/logout', cas.logout);
+passport.deserializeUser(function(username, done) {
+  done(null, { username });
+});
 
 module.exports = router;
