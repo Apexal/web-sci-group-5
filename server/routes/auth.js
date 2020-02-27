@@ -1,37 +1,53 @@
 const express = require('express');
 const router = express.Router();
-
+const debug = require('debug')('app');
 const passport = require('passport');
 const CasStrategy = require('passport-cas2').Strategy;
 
-const cas = new CasStrategy({
-  casURL: 'https://cas-auth.rpi.edu/cas',
-},
-  function (username, profile, done) {
-    // TODO: find or create Student from username
-    username = username.toLowerCase();
+const User = require('./api/users/users.model')
 
-    done(null, { username });
-  }
+const cas = new CasStrategy({
+    casURL: 'https://cas-auth.rpi.edu/cas',
+},
+    async function (username, profile, done) {
+        username = username.toLowerCase().trim();
+
+        // Find or create User from username
+        try {
+            let user = await User.findOne({ username });
+
+            if (!user) {
+                user = new User({
+                    username
+                });
+                await user.save();
+                debug(`Created new user '${username}'`);
+            }
+            debug(`Logged in '${username}'`);
+            return done(null, user);
+        } catch (e) {
+            return done(e);
+        }
+    }
 );
 
 passport.use(cas);
 
 router.get('/login', passport.authenticate('cas'), function (req, res) {
-  res.redirect('/success');
+    res.redirect('/');
 })
 
 router.get('/logout', function (req, res) {
-  var returnURL = 'http://localhost:5000';
-  cas.logout(req, res, returnURL);
+    cas.logout(req, res);
 });
 
-passport.serializeUser(function(user, done) {
-  done(null, user.username);
+passport.serializeUser(function (user, done) {
+    done(null, user.username);
 });
 
-passport.deserializeUser(function(username, done) {
-  done(null, { username });
+passport.deserializeUser(async function (username, done) {
+    const user = await User.findOne({ username });
+    return done(null, user);
 });
 
 module.exports = router;

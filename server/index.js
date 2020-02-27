@@ -1,4 +1,5 @@
 require('dotenv').config();
+const path = require('path');
 const express = require('express');
 const session = require('express-session');
 const helmet = require('helmet');
@@ -30,6 +31,11 @@ app.use((req, res, next) => {
 });
 
 app.use(require('./routes'));
+
+// Send all non-API routes to the HTML file
+app.use(function (req, res) {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 app.listen(port, () => debug(`Server running on port ${port}: http://localhost:${port}`));
 connectToMongoDB();
