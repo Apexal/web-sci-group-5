@@ -12,7 +12,6 @@ const port = process.env.PORT || 5000;
 const mongoose = require('mongoose');
 connectToMongoDB();
 
-
 const MongoStore = require('connect-mongo')(session);
 
 /* Set up session storage */
