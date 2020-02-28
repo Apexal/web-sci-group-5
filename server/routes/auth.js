@@ -35,9 +35,10 @@ passport.use(cas);
 
 router.get('/login', passport.authenticate('cas'), function (req, res) {
     res.redirect('/');
-})
+});
 
 router.get('/logout', function (req, res) {
+    debug(`Loggout out '${req.user.username}'`);
     cas.logout(req, res);
 });
 
