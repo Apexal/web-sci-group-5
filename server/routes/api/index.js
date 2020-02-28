@@ -8,6 +8,7 @@ router.get('/version', (req, res) => {
 });
 
 router.use('/users', require('./users'));
+router.use('/courses', require('./courses'));
 router.use('/textbooks', require('./textbooks'));
 
 module.exports = router;

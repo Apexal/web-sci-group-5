@@ -9,7 +9,7 @@ const schema = new Schema(
             first: { type: String },
             preferred: { type: String },
             last: { type: String },
-        },
+        }
     },
     {
         timestamps: true
