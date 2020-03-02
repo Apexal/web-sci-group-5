@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const got = require('got');
 const debug = require('debug')('api');
-const Textbook = require('./textbooks.model');
 
 const Textbook = require('./textbooks.model');
 
