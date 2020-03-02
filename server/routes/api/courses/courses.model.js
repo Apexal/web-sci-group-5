@@ -11,11 +11,17 @@ const schema = new Schema(
         subjectCode: { type: String, minlength: 1, maxlength: 5, required: true },
         code: { type: String, minlength: 4, maxlength: 4, required: true },
         title: { type: String, minlength: 1, maxlength: 200, required: true },
-        // section: { type: Object }
+        sections: [{ 
+            crn: { type: String },
+            sectionId: { type: String },
+            periods: [{ type: Object }]
+         }]
         /**
-         * section: {
-         *   '01': [periods]
-         * }
+         * sections: [
+         *   crn: 'xxxx',
+         *   sectionId: '01',
+         *   periods: []
+         * ]
          */
     },
     {
