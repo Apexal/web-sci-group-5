@@ -9,11 +9,17 @@ const passport = require('passport');
 const app = express();
 const port = process.env.PORT || 5000;
 
+const mongoose = require('mongoose');
+connectToMongoDB();
+
+const MongoStore = require('connect-mongo')(session);
+
 /* Set up session storage */
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
     cookie: {
         secure: app.get('env') === 'production'
     }
@@ -38,4 +44,3 @@ app.use(function (req, res) {
 });
 
 app.listen(port, () => debug(`Server running on port ${port}: http://localhost:${port}`));
-connectToMongoDB();

@@ -4,6 +4,8 @@ const got = require('got');
 const debug = require('debug')('api');
 const Textbook = require('./textbooks.model');
 
+const Textbook = require('./textbooks.model');
+
 /**
  * Gets a textbook with ID `textbookID`.
  * 
