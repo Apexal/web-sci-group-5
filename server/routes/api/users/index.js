@@ -14,6 +14,29 @@ router.get('/me', function(req, res) {
     res.json(req.user);
 });
 
+/**
+ * Update the current logged in user.
+ * 
+ * **Request Body**
+ * - name: Object with keys 'first', 'preferred', and 'last'
+ * 
+ * **Response JSON**
+ * - updated user document
+ */
+router.patch('/me', async function(req, res) {
+    if (req.body.name) {
+        req.user.name = req.body.name;
+    }
+    try {
+        await req.user.save();
+    } catch (e) {
+        debug(e);
+        return res.status(400).json({ error: 'Failed to update user, some values were invalid.' });
+    }
+
+    res.json(req.user);
+});
+
 router.get('/:userID', async function(req,res) {
     const userID = req.params.userID;
     
