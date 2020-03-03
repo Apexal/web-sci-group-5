@@ -31,11 +31,6 @@ app.use(passport.session());
 app.use(helmet()); // Setting HTTP headers for security
 app.use(express.json()); // Let Express parse JSON request bodies
 
-/* Middlware that all requests pass through first */
-app.use((req, res, next) => {
-    next();
-});
-
 app.use(require('./routes'));
 
 // Send all non-API routes to the HTML file
