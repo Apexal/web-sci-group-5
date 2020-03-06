@@ -7,7 +7,7 @@ const connectToMongoDB = require('./config/mongo');
 const debug = require('debug')('app')
 const passport = require('passport');
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 
 const mongoose = require('mongoose');
 connectToMongoDB();
@@ -30,11 +30,6 @@ app.use(passport.session());
 
 app.use(helmet()); // Setting HTTP headers for security
 app.use(express.json()); // Let Express parse JSON request bodies
-
-/* Middlware that all requests pass through first */
-app.use((req, res, next) => {
-    next();
-});
 
 app.use(require('./routes'));
 

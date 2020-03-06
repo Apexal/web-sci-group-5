@@ -5,6 +5,16 @@ const debug = require('debug')('api');
 
 const Textbook = require('./textbooks.model');
 
+router.get('/', async function(req, res) {
+    try {
+        const textbooks = await Textbook.find({});
+        res.json(textbooks);
+    } catch (e) {
+        debug(e);
+        res.status(500).json({ error: 'There was an error getting all textbooks.' });
+    }
+});
+
 /**
  * Gets a textbook with ID `textbookID`.
  * 
@@ -47,12 +57,12 @@ router.get('/:textbookID', async function getTextbook(req, res) {
  * **Side effects**
  * - Saves each textbook's information to the database if not already stored
  */
-router.post('/', async (req, res) => {
+router.post('/import', async (req, res) => {
     try {
         // Check if CRNs were included in the request
         const { crns } = req.body;
-        if (!crns) {
-            return res.status(400).json({ error: 'Please include CRNs' });
+        if (!crns || crns.length === 0) {
+            return res.status(400).json({ error: 'Please include non-empty `crns` in request body.' });
         }
 
         // Modify all of the incoming CRNs to match the bookstore's format
@@ -100,8 +110,9 @@ router.post('/', async (req, res) => {
                 try {
                     const found = await Textbook.findOne({ isbn: textbook.isbn });
                     if (!found) {
+                        console.log(textbook);
                         const book = new Textbook(textbook);
-                        textbooks.push(book.save());
+                        textbooks.push(await book.save());
                     }
                 } catch (e) {
                     debug(e);

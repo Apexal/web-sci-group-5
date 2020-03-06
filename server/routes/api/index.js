@@ -10,5 +10,6 @@ router.get('/version', (req, res) => {
 router.use('/users', require('./users'));
 router.use('/courses', require('./courses'));
 router.use('/textbooks', require('./textbooks'));
+router.use('/textbooklistings', require('./textbooklistings'));
 
 module.exports = router;

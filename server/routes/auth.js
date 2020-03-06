@@ -37,15 +37,16 @@ router.get('/login', passport.authenticate('cas'), function (req, res) {
     res.redirect('/');
 });
 
-
-router.get('/test/loginAs', async function (req, res, next) {
-    const username = req.query.username;
-    const user = await User.findOne({ username });
-    req.login(user, function (err) {
-        if (err) return next(err);
-        return res.redirect('/api/users/me');
+if (process.env.NODE_ENV === 'development') {
+    router.get('/test/loginAs', async function (req, res, next) {
+        const username = req.query.username;
+        const user = await User.findOne({ username });
+        req.login(user, function (err) {
+            if (err) return next(err);
+            return res.redirect('/api/users/me');
+        });
     });
-});
+}
 
 router.get('/logout', function (req, res) {
     debug(`Loggout out '${req.user.username}'`);
