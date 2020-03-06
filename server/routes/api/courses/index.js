@@ -7,15 +7,31 @@ const { getPeriods, getCourseFromPeriods } = require('../../../utils/courseScrap
 
 const Course = require('./courses.model');
 
-router.get('/', async function (req, res, next) {
+router.get('/', async function(req, res) {
     try {
-        const dom = await JSDOM.fromURL(`https://sis.rpi.edu/reg/zs202001.htm`)
-        const periods = getPeriods(dom.window.document);
-        const courses = getCourseFromPeriods(periods);
+        const courses = await Course.find({});
+        res.json(courses);
+    } catch (e) {
+        debug(e);
+        return res.status(500).json({ error: 'There was an error getting all courses.' });
+    }
+});
+
+router.post('/import', async function (req, res, next) {
+    const termCode = req.body.termCode;
+
+    if (!termCode) {
+        return res.status(400).json({ error: 'Missing termCode in request body.' });
+    }
+    try {
+        const dom = await JSDOM.fromURL(`https://sis.rpi.edu/reg/zs${termCode}.htm`)
+        const periods = getPeriods(dom.window.document, termCode);
+        const courses = getCourseFromPeriods(periods, termCode);
     
         return res.json(courses);
     } catch (e) {
-        return next(e);
+        debug(e);
+        res.status(500).json({ error: 'There was an error importing the courses from the Registrar.' });
     }
 });
 
