@@ -6,6 +6,7 @@ angular
     "ngRoute",
     "myApp.main",
     "myApp.user_info",
+    "myApp.listing",
     "myApp.version"
   ])
   .config([
