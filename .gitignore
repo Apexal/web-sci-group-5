@@ -1,3 +1,11 @@
 node_modules/
 
 .env
+
+client/logs/*
+!client/.gitkeep
+client/node_modules/
+client/app/lib/
+client/tmp
+.DS_Store
+.idea
