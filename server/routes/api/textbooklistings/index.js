@@ -5,5 +5,4 @@ const debug = require('debug')('api');
 const TextbookListing = require('./textbooklistings.model');
 
 
-
 module.exports = router;

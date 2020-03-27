@@ -5,6 +5,12 @@ const debug = require('debug')('api');
 
 const Textbook = require('./textbooks.model');
 
+/**
+ * Get all textbooks.
+ * 
+ * **Response JSON**
+ * - array of Textbook documents
+ */
 router.get('/', async function(req, res) {
     try {
         const textbooks = await Textbook.find({});
@@ -16,33 +22,84 @@ router.get('/', async function(req, res) {
 });
 
 /**
+ * Middleware to find a Textbook from the request parameter 'textbookID'.
+ * If not found it throws an error and does not continue to the actual controller. 
+ */
+async function getTextbookMiddleware (req, res, next) {
+    const textbookID = req.params.textbookID;
+
+    try {
+        res.locals.textbook = await Textbook.findById(textbookID);
+    } catch (e) {
+        debug(e);
+        return res.status(500).json({ error: 'Could not get textbook.' });
+    }
+
+    if (!res.locals.textbook) {
+        debug(`Could not find textbook with ID ${textbookID}`);
+        return res.status(404).json({ error: `Could not find textbook with id ${textbookID}.` });
+    }
+
+    next();
+}
+
+/**
  * Gets a textbook with ID `textbookID`.
  * 
  * **Request Parameters**
  * - `textbookID` ObjectID string
  * 
  * **Response JSON**
- * - the found textbook object or error
+ * - the found Textbook document or error
  */
-router.get('/:textbookID', async function getTextbook(req, res) {
-    const textbookID = req.params.textbookID;
+router.get('/:textbookID', getTextbookMiddleware, async function getTextbook(req, res) {
+    res.json(res.locals.textbook);
+});
 
-    let textbook;
+/**
+ * Updates a textbook with ID `textbookID`.
+ * 
+ * **Request Parameters**
+ * - `textbookID` ObjectID string
+ * 
+ * **Request Body**
+ * - any textbook properties to update (excluding `_id`)
+ * 
+ * **Response JSON**
+ * - the found Textbook document or error
+ */
+router.patch('/:textbookID', getTextbookMiddleware, async function updateTextbook(req, res) {  
+    delete req.body._id;
+
+    res.locals.textbook.set(req.body);
     try {
-        // Try to find textbook by ID, this fails if textbookID is not a valid ObjectID
-        textbook = await Textbook.findById(textbookID);
+        await res.locals.textbook.save();
     } catch (e) {
         debug(e);
-        return res.status(500).json({ error: 'Could not get textbook.' });
+        return res.status(500).json({ error: 'Failed to update the textbook.' });
     }
 
-    // Does textbook exist?
-    if (!textbook) {
-        debug(`Could not find textbook with ID ${textbookID}`);
-        return res.status(404).json({ error: 'Could not find textbook.' });
+    res.json(res.locals.textbook);
+});
+
+/**
+ * Delete a textbook with ID `textbookID`.
+ * 
+ * **Request Parameters**
+ * - `textbookID` ObjectID string
+ * 
+ * **Response JSON**
+ * - the found and deleted Textbook document or error
+ */
+router.delete('/:textbookID', getTextbookMiddleware, async function updateTextbook(req, res) {  
+    try {
+        await res.locals.textbook.remove();
+    } catch (e) {
+        debug(e);
+        return res.status(500).json({ error: 'Failed to remove the textbook.' });
     }
 
-    res.json(textbook);
+    res.json(res.locals.textbook);
 });
 
 /**
@@ -62,7 +119,7 @@ router.post('/import', async (req, res) => {
         // Check if CRNs were included in the request
         const { crns } = req.body;
         if (!crns || crns.length === 0) {
-            return res.status(400).json({ error: 'Please include non-empty `crns` in request body.' });
+            return res.status(400).json({ error: 'Please include non-empty `crns` array in request body.' });
         }
 
         // Modify all of the incoming CRNs to match the bookstore's format
@@ -86,22 +143,20 @@ router.post('/import', async (req, res) => {
         });
 
         // Parse out the data received from the bookstore's API to match our use case
-        const coursesInfo = body[0].courseSectionDTO.map(course => {
-            if (course.courseSectionStatus.code !== '500') {
-                return {
-                    courseName: `${course.department}-${course.course}-${course.section}`,
-                    instructor: course.instructor,
-                    textbooks: course.courseMaterialResultsList && course.courseMaterialResultsList.map(book => ({
-                        image: `http:${book.bookImage}`,
-                        title: book.title,
-                        edition: book.edition,
-                        authors: book.author,
-                        isbn: book.isbn,
-                        publisher: book.publisher
-                    })) || []
-                }
-            }
-        }).filter(course => course);
+        const coursesInfo = body[0].courseSectionDTO
+            .filter(course => course.courseSectionStatus.code !== '500')
+            .map(course => ({
+                courseName: `${course.department}-${course.course}-${course.section}`,
+                instructor: course.instructor,
+                textbooks: course.courseMaterialResultsList && course.courseMaterialResultsList.map(book => ({
+                    image: `http:${book.bookImage}`,
+                    title: book.title,
+                    edition: book.edition,
+                    authors: book.author,
+                    isbn: book.isbn,
+                    publisher: book.publisher
+                })) || []  
+            }));
 
         // Add all textbooks to the database if they aren't stored yet
         const textbooks = [];
