@@ -11,7 +11,7 @@ const Textbook = require('./textbooks.model');
  * **Response JSON**
  * - array of Textbook documents
  */
-router.get('/', async function(req, res) {
+router.get('/', async function (req, res) {
     try {
         const textbooks = await Textbook.find({});
         res.json(textbooks);
@@ -25,7 +25,7 @@ router.get('/', async function(req, res) {
  * Middleware to find a Textbook from the request parameter 'textbookID'.
  * If not found it throws an error and does not continue to the actual controller. 
  */
-async function getTextbookMiddleware (req, res, next) {
+async function getTextbookMiddleware(req, res, next) {
     const textbookID = req.params.textbookID;
 
     try {
@@ -52,7 +52,7 @@ async function getTextbookMiddleware (req, res, next) {
  * **Response JSON**
  * - the found Textbook document or error
  */
-router.get('/:textbookID', getTextbookMiddleware, async function getTextbook(req, res) {
+router.get('/:textbookID', getTextbookMiddleware, async function (req, res) {
     res.json(res.locals.textbook);
 });
 
@@ -66,9 +66,9 @@ router.get('/:textbookID', getTextbookMiddleware, async function getTextbook(req
  * - any textbook properties to update (excluding `_id`)
  * 
  * **Response JSON**
- * - the found Textbook document or error
+ * - the found and updated Textbook document or error
  */
-router.patch('/:textbookID', getTextbookMiddleware, async function updateTextbook(req, res) {  
+router.patch('/:textbookID', getTextbookMiddleware, async function (req, res) {
     delete req.body._id;
 
     res.locals.textbook.set(req.body);
@@ -91,7 +91,7 @@ router.patch('/:textbookID', getTextbookMiddleware, async function updateTextboo
  * **Response JSON**
  * - the found and deleted Textbook document or error
  */
-router.delete('/:textbookID', getTextbookMiddleware, async function updateTextbook(req, res) {  
+router.delete('/:textbookID', getTextbookMiddleware, async function (req, res) {
     try {
         await res.locals.textbook.remove();
     } catch (e) {
@@ -155,7 +155,7 @@ router.post('/import', async (req, res) => {
                     authors: book.author,
                     isbn: book.isbn,
                     publisher: book.publisher
-                })) || []  
+                })) || []
             }));
 
         // Add all textbooks to the database if they aren't stored yet

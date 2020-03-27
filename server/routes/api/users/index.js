@@ -28,7 +28,7 @@ router.get('/', async function (req, res) {
  * **Response JSON**
  * - logged in user document
  */
-router.get('/me', function(req, res) {
+router.get('/me', function (req, res) {
     res.json(req.user);
 });
 
@@ -41,7 +41,7 @@ router.get('/me', function(req, res) {
  * **Response JSON**
  * - updated user document
  */
-router.patch('/me', async function(req, res) {
+router.patch('/me', async function (req, res) {
     if (req.body.name) {
         req.user.name = req.body.name;
     }
@@ -64,9 +64,9 @@ router.patch('/me', async function(req, res) {
  * **Response JSON**
  * - user object with limited properties 
  */
-router.get('/:userID', async function(req,res) {
+router.get('/:userID', async function (req, res) {
     const userID = req.params.userID;
-    
+
     let user;
     try {
         // Try to find user by ID, this fails if userID is not a valid ObjectID
