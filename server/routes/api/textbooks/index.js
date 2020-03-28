@@ -167,7 +167,7 @@ router.post('/import', async (req, res) => {
                     if (!found) {
                         console.log(textbook);
                         const book = new Textbook(textbook);
-                        textbooks.push(await book.save());
+                        textbooks.push(book.save());
                     }
                 } catch (e) {
                     debug(e);
