@@ -7,7 +7,8 @@ angular
     "myApp.main",
     "myApp.user_info",
     "myApp.listing",
-    "myApp.version"
+    "myApp.version",
+    
   ])
   .config([
     "$locationProvider",
