@@ -23,7 +23,7 @@ router.get('/', async function (req, res) {
     }
 
     try {
-        const textbookListings = await TextbookListing.find(query);
+        const textbookListings = await TextbookListing.find(query).populate('_textbook');
         res.json(textbookListings);
     } catch (e) {
         debug(e);
