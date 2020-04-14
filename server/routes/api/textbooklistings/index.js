@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const debug = require('debug')('api');
 
+const { requireAuth } = require('../utils');
+
 const TextbookListing = require('./textbooklistings.model');
 
 /**
@@ -60,7 +62,7 @@ async function getTextbookListingMiddleware(req, res, next) {
  * **Response JSON**
  * - the found TextbookListing document or error
  */
-router.get('/:textbookListingID', getTextbookListingMiddleware, async function (req, res) {
+router.get('/:textbookListingID', requireAuth, getTextbookListingMiddleware, async function (req, res) {
     res.json(res.locals.textbookListing);
 });
 
@@ -76,7 +78,7 @@ router.get('/:textbookListingID', getTextbookListingMiddleware, async function (
  * **Response JSON**
  * - the found and updated TextbookListing document or error
  */
-router.patch('/:textbookListingID', getTextbookListingMiddleware, async function (req, res) {
+router.patch('/:textbookListingID', requireAuth, getTextbookListingMiddleware, async function (req, res) {
     delete req.body._id;
     delete req.body._user;
     delete req.body._textbook;
@@ -101,7 +103,7 @@ router.patch('/:textbookListingID', getTextbookListingMiddleware, async function
  * **Response JSON**
  * - the found and deleted TextbookListing document or error
  */
-router.delete('/:textbookListingID', getTextbookListingMiddleware, async function (req, res) {
+router.delete('/:textbookListingID', requireAuth, getTextbookListingMiddleware, async function (req, res) {
     try {
         await res.locals.textbookListing.remove();
     } catch (e) {

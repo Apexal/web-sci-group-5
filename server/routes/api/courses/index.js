@@ -3,6 +3,7 @@ const router = express.Router();
 const debug = require('debug')('api');
 const {JSDOM} = require('jsdom');
 
+const { requireAuth } = require('../utils');
 const { getPeriods, getCourseFromPeriods } = require('../../../utils/courseScraping');
 
 const Course = require('./courses.model');
@@ -17,7 +18,7 @@ router.get('/', async function(req, res) {
     }
 });
 
-router.post('/import', async function (req, res, next) {
+router.post('/import', requireAuth, async function (req, res, next) {
     const termCode = req.body.termCode;
 
     if (!termCode) {
@@ -44,7 +45,7 @@ router.post('/import', async function (req, res, next) {
  * **Response JSON**
  * - the found course object or error
  */
-router.get('/:courseID', async function getCourse(req, res) {
+router.get('/:courseID', requireAuth, async function getCourse(req, res) {
     const courseID = req.params.courseID;
 
     let course;
