@@ -29,10 +29,6 @@
   </head>
   <body>
     <b-header></b-header>
-    <ul class="menu">
-      <li><a href="#!/main">main</a></li>
-      <li><a href="#!/user_info">user info</a></li>
-    </ul>
 
     <!--[if lt IE 7]>
       <p class="browsehappy">
@@ -45,11 +41,7 @@
       <div ng-view></div>
     </main>
 
-    <div>AngularJS seed app: v<span app-version></span></div>
-
-    <footer>
-      footer
-    </footer>
+    <b-footer></b-footer>
     <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
   -->
@@ -60,6 +52,7 @@
     <script src="user_info/user_info.js"></script>
     <script src="listing/listing.js"></script>
     <script src="components/header/header.js"></script>
+    <script src="components/footer/footer.js"></script>
     <script src="core/version/version.js"></script>
     <script src="core/version/version-directive.js"></script>
     <script src="core/version/interpolate-filter.js"></script>
