@@ -6,7 +6,7 @@ angular
     "$routeProvider",
     function($routeProvider) {
       $routeProvider.when("/main", {
-        templateUrl: "main/main.html",
+        templateUrl: "pages/main/main.html",
         controller: "MainCtrl"
       });
     }

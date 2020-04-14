@@ -6,7 +6,7 @@ angular
     "$routeProvider",
     function($routeProvider) {
       $routeProvider.when("/listing", {
-        templateUrl: "listing/listing.html",
+        templateUrl: "pages/listing/listing.html",
         controller: "ListingCtrl"
       });
     }
