@@ -8,11 +8,14 @@ const debug = require('debug')('app')
 const passport = require('passport');
 const app = express();
 const port = process.env.PORT || 3000;
+const cors = require('cors');
 
 const mongoose = require('mongoose');
 connectToMongoDB();
 
 const MongoStore = require('connect-mongo')(session);
+
+app.use(cors());
 
 /* Set up session storage */
 app.use(session({

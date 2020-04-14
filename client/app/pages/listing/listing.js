@@ -11,4 +11,6 @@ angular
       });
     }
   ])
-  .controller("ListingCtrl", [function() {}]);
+  .controller("ListingCtrl", ['$scope', 'textbookListings', function($scope, textbookListings) {
+    $scope.textbookListings = textbookListings.fetchTextbookListings()
+  }]);
