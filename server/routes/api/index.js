@@ -6,7 +6,7 @@ const { requireAuth } = require('./utils');
 const API_VERSION = '1';
 
 router.get('/version', (req, res) => {
-    res.send(API_VERSION);
+    res.json({ version: API_VERSION });
 });
 
 router.use('/users', requireAuth, require('./users'));

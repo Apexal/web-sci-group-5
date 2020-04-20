@@ -4,6 +4,7 @@ const debug = require('debug')('api');
 
 const { requireAuth, requireAdmin } = require('../utils');
 
+const Textbook = require('../textbooks/textbooks.model');
 const TextbookListing = require('./textbooklistings.model');
 
 /**
@@ -32,10 +33,43 @@ router.get('/', async function (req, res) {
 });
 
 /**
- * Create a new textbooklisting
+ * Create a new textbooklisting for the current user.
  */
-router.post('/', async function (req, res) {
+router.post('/', requireAuth, async function (req, res) {
+    const { textbookID, condition, proposedPrice } = req.body;
 
+    // Validate presence of request
+    if (!textbookID || !condition || !proposedPrice) {
+        return res.status(400).json({ error: 'Invalid request body. Be sure to pass `textbookID`, `condition`, and `proposedPrice`.' })
+    }
+
+    // Find textbook
+    let textbook;
+    try {
+        textbook = await Textbook.findById(textbookID);
+    } catch (e) {
+        return res.status(400).json({ error: 'Failed to find associated textbook.' });
+    }
+
+    const textbookListingData = {
+        _user: req.user,
+        _textbook: textbook,
+        condition,
+        proposedPrice,
+        sold: false
+    }
+
+    const createdTextbookListing = new TextbookListing(textbookListingData);
+
+    try {
+        await createdTextbookListing.save();
+    } catch (e) {
+        debug(`Failed to put textbook up for sale for ${req.user.username}: ${e}`);
+        return res.status(400).json({ error: 'There was an error putting the textbook up for sale.' });
+    }
+
+    debug(`${req.user.username} put up a ${condition}-condition ${textbook.title} ${textbook.edition} ed. textbook for $${proposedPrice}`);
+    res.status(201).json({ createdTextbookListing });
 });
 
 /**
