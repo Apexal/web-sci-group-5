@@ -3,7 +3,7 @@ const router = express.Router();
 const got = require('got');
 const debug = require('debug')('api');
 
-const { requireAuth } = require('../utils');
+const { requireAuth, requireAdmin } = require('../utils');
 
 const Textbook = require('./textbooks.model');
 
@@ -70,7 +70,7 @@ router.get('/:textbookID', getTextbookMiddleware, async function (req, res) {
  * **Response JSON**
  * - the found and updated Textbook document or error
  */
-router.patch('/:textbookID', requireAuth, getTextbookMiddleware, async function (req, res) {
+router.patch('/:textbookID', requireAdmin, getTextbookMiddleware, async function (req, res) {
     delete req.body._id;
 
     res.locals.textbook.set(req.body);
@@ -93,7 +93,7 @@ router.patch('/:textbookID', requireAuth, getTextbookMiddleware, async function 
  * **Response JSON**
  * - the found and deleted Textbook document or error
  */
-router.delete('/:textbookID', requireAuth, getTextbookMiddleware, async function (req, res) {
+router.delete('/:textbookID', requireAdmin, getTextbookMiddleware, async function (req, res) {
     try {
         await res.locals.textbook.remove();
     } catch (e) {
@@ -116,7 +116,7 @@ router.delete('/:textbookID', requireAuth, getTextbookMiddleware, async function
  * **Side effects**
  * - Saves each textbook's information to the database if not already stored
  */
-router.post('/import', requireAuth, async (req, res) => {
+router.post('/import', requireAdmin, async (req, res) => {
     try {
         // Check if CRNs were included in the request
         const { crns } = req.body;

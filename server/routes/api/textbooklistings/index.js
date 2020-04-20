@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const debug = require('debug')('api');
 
-const { requireAuth } = require('../utils');
+const { requireAuth, requireAdmin } = require('../utils');
 
 const TextbookListing = require('./textbooklistings.model');
 
@@ -29,6 +29,13 @@ router.get('/', async function (req, res) {
         debug(e);
         res.status(500).json({ error: 'There was an error getting all textbook listings.' });
     }
+});
+
+/**
+ * Create a new textbooklisting
+ */
+router.post('/', async function (req, res) {
+
 });
 
 /**
