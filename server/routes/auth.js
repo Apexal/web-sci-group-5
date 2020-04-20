@@ -4,6 +4,8 @@ const debug = require('debug')('app');
 const passport = require('passport');
 const CasStrategy = require('passport-cas2').Strategy;
 
+const stripe = require('../stripe');
+
 const User = require('./api/users/users.model')
 
 const cas = new CasStrategy({
@@ -17,11 +19,14 @@ const cas = new CasStrategy({
             let user = await User.findOne({ username });
 
             if (!user) {
+                const stripeAccount = await stripe.createUserAccount(user);
                 user = new User({
-                    username
+                    username,
+                    stripeAccountID: stripeAccount.id
                 });
+                
                 await user.save();
-                debug(`Created new user '${username}'`);
+                debug(`Created new user '${username}' with Stripe account`);
             }
             debug(`Logged in '${username}'`);
             return done(null, user);
@@ -49,7 +54,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 router.get('/logout', function (req, res) {
-    debug(`Loggout out '${req.user.username}'`);
+    debug(`Logged out '${req.user.username}'`);
     cas.logout(req, res);
 });
 
