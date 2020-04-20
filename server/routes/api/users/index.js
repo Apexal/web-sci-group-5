@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const debug = require('debug')('api');
 
+const { stripe } = require('../../../stripe');
+
 const User = require('./users.model');
 
 const USER_PROPERTIES = '_id username name';
@@ -30,6 +32,19 @@ router.get('/', async function (req, res) {
  */
 router.get('/me', function (req, res) {
     res.json(req.user);
+});
+
+/**
+ * Get the current logged in user.
+ * 
+ * **Response JSON**
+ * - logged in user document
+ */
+router.get('/me/balance', async function (req, res) {
+    const balance = await stripe.balance.retrieve({
+        stripeAccount: req.user.stripeAccountID
+    })
+    res.json({ balance });
 });
 
 /**

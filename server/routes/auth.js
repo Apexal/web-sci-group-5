@@ -6,7 +6,7 @@ const CasStrategy = require('passport-cas2').Strategy;
 
 const stripe = require('../stripe');
 
-const User = require('./api/users/users.model')
+const User = require('./api/users/users.model');
 
 const cas = new CasStrategy({
     casURL: 'https://cas-auth.rpi.edu/cas',
