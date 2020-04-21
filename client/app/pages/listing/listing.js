@@ -11,13 +11,13 @@ angular
       });
     }
   ])
-  .controller("ListingCtrl", ['$scope', 'textbookListings', function($scope, textbookListings) {
+  .controller("ListingCtrl", ['$scope', 'TextbookListingsService', function($scope, textbookListingsService) {
     $scope.text = 'asdasd';
     $scope.textbookListings = [];
-    textbookListings.fetchTextbookListings()
+    textbookListingsService.fetchTextbookListings()
       .then(listings => {
         console.log(listings)
         $scope.textbookListings = listings
         $scope.$apply();
-      })
+      });
   }]);
