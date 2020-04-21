@@ -6,7 +6,7 @@ angular.module("BookItAPI")
     /** Fetch textbooklistings from the server */
     service.fetchTextbookListings = async () => {
       const response = await $http.get('/api/textbooklistings');
-      listings = response.data;
+      listings = response.data.textbookListings;
       return listings;
     }
 

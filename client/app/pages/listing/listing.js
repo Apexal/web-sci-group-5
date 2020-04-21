@@ -12,13 +12,10 @@ angular
     }
   ])
   .controller("ListingCtrl", ["$scope", "TextbookListingsService", function($scope, textbookListingsService) {
-    $scope.text = 'asdasd';
-    
     $scope.textbookListings = [];
     textbookListingsService.fetchTextbookListings()
-      .then(listings => {
-        console.log(listings)
-        $scope.textbookListings = listings
+    .then(listings => {
+      $scope.textbookListings = listings;
         $scope.$apply();
       });
   }]);
