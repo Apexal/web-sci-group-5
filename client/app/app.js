@@ -1,12 +1,14 @@
 "use strict";
 
 angular.module("Authentication", []);
+angular.module("Stripe", []);
 angular.module("BookItAPI", []);
 
 // Declare app level module which depends on views, and core components
 angular
   .module("BookIt", [
     "Authentication",
+    "Stripe",
     "BookItAPI",
     "ngRoute",
     "BookIt.main",
@@ -24,6 +26,6 @@ angular
       $routeProvider.otherwise({ redirectTo: "/main" });
     }
   ])
-  .run(["AuthService", function (AuthService) {
+  .run(["AuthService", "StripeService", function (AuthService, StripeService) {
     AuthService.fetchUser();
   }]);
