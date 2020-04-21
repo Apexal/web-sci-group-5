@@ -16,21 +16,27 @@
         ng-repeat="listing in textbookListings"
         class="col-12 col-sm-6 col-md-3"
       >
-        <div class="card animated zoomIn">
-          <img
-            src="https://cti.northwestern.edu/wp-content/uploads/2018/05/braunwalds.jpg"
-            alt="Textbook cover"
-            class="card-img-top"
-          />
+        <div class="card animated zoomIn textbook-listing-card">
+          <div class="card-img-holder">
+            <span class="badge badge-warning card-condition"
+              >{{ listing.condition }}</span
+            >
+            <span class="badge badge-secondary card-proposed-price"
+              >${{ listing.proposedPrice }}</span
+            >
+            <img
+              src="https://cti.northwestern.edu/wp-content/uploads/2018/05/braunwalds.jpg"
+              alt="Textbook cover"
+              class="card-img-top"
+            />
+          </div>
           <div class="card-body">
             <h5 class="card-title">
               {{ listing._textbook.title }}
-              <span class="float-right">${{ listing.proposedPrice }}</span>
             </h5>
             <p class="card-text">Needed for <strong>[COURSE(S)]</strong></p>
-            <a href="#" class="btn btn-primary text-capitalize"
-              >Buy {{ listing.condition }}</a
-            >
+            <a href="#" class="btn btn-primary text-capitalize">Buy</a>
+            <a href="#" class="btn btn-danger text-capitalize">Sell</a>
           </div>
         </div>
       </div>

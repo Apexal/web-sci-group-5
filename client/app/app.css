@@ -1,25 +1,17 @@
-/* app css stylesheet */
-
-.menu {
-  list-style: none;
-  border-bottom: 0.1em solid black;
-  margin-bottom: 2em;
-  padding: 0 0 0.5em;
+.textbook-listing-card .card-img-holder {
+  position: relative;
 }
 
-.menu:before {
-  content: "[";
+.textbook-listing-card .card-img-holder .card-condition {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  font-size: 1.25em;
 }
 
-.menu:after {
-  content: "]";
-}
-
-.menu > li {
-  display: inline;
-}
-
-.menu > li + li:before {
-  content: "|";
-  padding-right: 0.3em;
+.textbook-listing-card .card-img-holder .card-proposed-price {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  font-size: 1.25em;
 }
