@@ -11,4 +11,13 @@ angular
       });
     }
   ])
-  .controller("UserInfoCtrl", [function() {}]);
+  .controller("UserInfoCtrl", ["$scope", "AuthService", function($scope, AuthService) {
+    $scope.user = AuthService.getUser();
+    $scope.isAuthenticated = AuthService.isAuthenticated();
+    
+    $scope.$on("auth-changed", function () {
+      $scope.user = AuthService.getUser();
+      $scope.isAuthenticated = AuthService.isAuthenticated();
+      $scope.$apply();
+    });
+  }]);

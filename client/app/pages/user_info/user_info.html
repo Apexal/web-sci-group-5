@@ -1,4 +1,48 @@
 <div class="container">
   <h1 class="title">User Info</h1>
-  <p>This is the partial for the User Info view.</p>
+
+  <form class="my-3">
+    <div class="form-group">
+      <label for="email">Email address</label>
+      <div class="input-group">
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          aria-describedby="emailHelp"
+          ng-value="user.username"
+          disabled
+        />
+        <div class="input-group-append">
+          <div class="input-group-text">@rpi.edu</div>
+        </div>
+      </div>
+      <small id="emailHelp" class="form-text text-muted"
+        >This email will be shared when you put textbooks up for sale.</small
+      >
+    </div>
+    <div class="form-row">
+      <div class="col">
+        <label for="first-name">First Name</label>
+        <input
+          class="form-control"
+          type="text"
+          name="firstName"
+          id="first-name"
+        />
+      </div>
+      <div class="col">
+        <label for="last-name">Last Name</label>
+        <input
+          class="form-control"
+          type="text"
+          name="lastName"
+          id="last-name"
+        />
+      </div>
+    </div>
+
+    <hr />
+    <button type="submit" class="btn btn-primary">Save</button>
+  </form>
 </div>
