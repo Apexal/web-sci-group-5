@@ -10,10 +10,22 @@ const Course = require('./courses.model');
 
 /**
  * Get all courses stored in the database.
+ * 
+ * **Request Query**
+ * - termCode (optional) Term code of courses to find
+ * 
+ * **Response JSON**
+ * - courses: Array of Course documents
  */
 router.get('/', async function(req, res) {
+    const query = {};
+
+    if ('termCode' in req.body) {
+        query.termCode = req.query.termCode;
+    }
+
     try {
-        const courses = await Course.find({});
+        const courses = await Course.find(query);
         res.json({ courses });
     } catch (e) {
         debug(e);
@@ -66,10 +78,10 @@ router.post('/import', requireAdmin, async function (req, res) {
  * Gets a course with ID `courseID`.
  * 
  * **Request Parameters**
- * - `courseID` ObjectID string
+ * - `courseID` ObjectID string of target Course document
  * 
  * **Response JSON**
- * - the found course object or error
+ * - course: the found Course document
  */
 router.get('/:courseID', async function getCourse(req, res) {
     const courseID = req.params.courseID;

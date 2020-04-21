@@ -11,15 +11,17 @@ const TextbookListing = require('./textbooklistings.model');
  * Get all TextbookListings with optional filters.
  * 
  * **Query Parameters**
- * - sold
+ * - sold (optional) 'true' or 'false' for whether or not to included sold listings (default false)
  * 
  * **Response JSON**
- * - array of Textbook documents
+ * - textbookListings: array of TextbookListing documents
  */
 router.get('/', async function (req, res) {
-    const query = {}
+    const query = {
+        sold: false
+    }
 
-    if (req.query.sold) {
+    if ('sold' in req.query) {
         query.sold = req.query.sold === 'true'
     }
 
@@ -34,6 +36,14 @@ router.get('/', async function (req, res) {
 
 /**
  * Create a new textbooklisting for the current user.
+ * 
+ * **Request Body**
+ * - textbookID: ObjectID string of desired Textbook
+ * - condition: The condition of the textbook
+ * - proposedPrice: Decimal price for the textbook listing
+ * 
+ * **Response JSON**
+ * - createdTextbookListing: Created TextbookLisiting document
  */
 router.post('/', requireAuth, async function (req, res) {
     const { textbookID, condition, proposedPrice } = req.body;
@@ -101,7 +111,7 @@ async function getTextbookListingMiddleware(req, res, next) {
  * - `textbookListingID` ObjectID string
  * 
  * **Response JSON**
- * - the found TextbookListing document or error
+ * - textbookListing: the found TextbookListing document or error
  */
 router.get('/:textbookListingID', requireAuth, getTextbookListingMiddleware, async function (req, res) {
     res.json({ textbookListing: res.locals.textbookListing });
@@ -117,7 +127,7 @@ router.get('/:textbookListingID', requireAuth, getTextbookListingMiddleware, asy
  * - any textbook listing properties to update (excluding `_id`, `_user`, `_textbook`)
  * 
  * **Response JSON**
- * - the found and updated TextbookListing document or error
+ * - textbookListing: the found and updated TextbookListing document or error
  */
 router.patch('/:textbookListingID', requireAuth, getTextbookListingMiddleware, async function (req, res) {
     delete req.body._id;
@@ -142,7 +152,7 @@ router.patch('/:textbookListingID', requireAuth, getTextbookListingMiddleware, a
  * - `textbookListingID` ObjectID string
  * 
  * **Response JSON**
- * - the found and deleted TextbookListing document or error
+ * - textbookListing: the found and deleted TextbookListing document or error
  */
 router.delete('/:textbookListingID', requireAuth, getTextbookListingMiddleware, async function (req, res) {
     try {
