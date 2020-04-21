@@ -25,7 +25,7 @@ router.get('/', async function (req, res) {
 
     try {
         const textbookListings = await TextbookListing.find(query).populate('_textbook');
-        res.json(textbookListings);
+        res.json({ textbookListings });
     } catch (e) {
         debug(e);
         res.status(500).json({ error: 'There was an error getting all textbook listings.' });
@@ -104,7 +104,7 @@ async function getTextbookListingMiddleware(req, res, next) {
  * - the found TextbookListing document or error
  */
 router.get('/:textbookListingID', requireAuth, getTextbookListingMiddleware, async function (req, res) {
-    res.json(res.locals.textbookListing);
+    res.json({ textbookListing: res.locals.textbookListing });
 });
 
 /**
@@ -132,7 +132,7 @@ router.patch('/:textbookListingID', requireAuth, getTextbookListingMiddleware, a
         return res.status(500).json({ error: 'Failed to update the textbook listing.' });
     }
 
-    res.json(res.locals.textbookListing);
+    res.json({ textbookListing: res.locals.textbookListing });
 });
 
 /**
@@ -152,7 +152,7 @@ router.delete('/:textbookListingID', requireAuth, getTextbookListingMiddleware, 
         return res.status(500).json({ error: 'Failed to remove the textbook listing.' });
     }
 
-    res.json(res.locals.textbookListing);
+    res.json({ textbookListing: res.locals.textbookListing });
 });
 
 module.exports = router;

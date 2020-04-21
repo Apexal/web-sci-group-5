@@ -16,7 +16,7 @@ const Textbook = require('./textbooks.model');
 router.get('/', async function (req, res) {
     try {
         const textbooks = await Textbook.find({});
-        res.json(textbooks);
+        res.json({ textbooks });
     } catch (e) {
         debug(e);
         res.status(500).json({ error: 'There was an error getting all textbooks.' });
@@ -55,7 +55,7 @@ async function getTextbookMiddleware(req, res, next) {
  * - the found Textbook document or error
  */
 router.get('/:textbookID', getTextbookMiddleware, async function (req, res) {
-    res.json(res.locals.textbook);
+    res.json({ textbook: res.locals.textbook });
 });
 
 /**
@@ -81,7 +81,7 @@ router.patch('/:textbookID', requireAdmin, getTextbookMiddleware, async function
         return res.status(500).json({ error: 'Failed to update the textbook.' });
     }
 
-    res.json(res.locals.textbook);
+    res.json({ textbook: res.locals.textbook });
 });
 
 /**
@@ -101,7 +101,7 @@ router.delete('/:textbookID', requireAdmin, getTextbookMiddleware, async functio
         return res.status(500).json({ error: 'Failed to remove the textbook.' });
     }
 
-    res.json(res.locals.textbook);
+    res.json({ textbook: res.locals.textbook });
 });
 
 /**

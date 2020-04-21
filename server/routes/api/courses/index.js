@@ -14,15 +14,25 @@ const Course = require('./courses.model');
 router.get('/', async function(req, res) {
     try {
         const courses = await Course.find({});
-        res.json(courses);
+        res.json({ courses });
     } catch (e) {
         debug(e);
         return res.status(500).json({ error: 'There was an error getting all courses.' });
     }
 });
 
-router.post('/import', requireAdmin, async function (req, res, next) {
-    const termCode = req.body.termCode;
+/**
+ * Import all courses for a given term code from the Registrar page and
+ * save them in the database or update them if they already exist.
+ * 
+ * **Request Body**
+ * - termCode: String term code
+ * 
+ * **Response JSON**
+ * - courses: Array of imported course documents
+ */
+router.post('/import', requireAdmin, async function (req, res) {
+    const { termCode } = req.body;
 
     if (!termCode) {
         return res.status(400).json({ error: 'Missing termCode in request body.' });
@@ -44,9 +54,10 @@ router.post('/import', requireAdmin, async function (req, res, next) {
             return existingCourse.save(); 
         }));
 
-        return res.json(courses);
+        debug(`Imported courses for term ${termCode}`);
+        return res.json({ courses });
     } catch (e) {
-        debug(e);
+        debug(`Failed to import courses for term ${termCode}: ${e}`);
         res.status(500).json({ error: 'There was an error importing the courses from the Registrar.' });
     }
 });
@@ -78,7 +89,7 @@ router.get('/:courseID', async function getCourse(req, res) {
         return res.status(404).json({ error: 'Could not find course.' });
     }
 
-    res.json(course);
+    res.json({ course });
 });
 
 module.exports = router;
