@@ -1,7 +1,7 @@
 <div class="container">
   <h1 class="title">User Info</h1>
 
-  <form class="my-3">
+  <form ng-submit="submitForm()" class="my-3">
     <div class="form-group">
       <label for="email">Email address</label>
       <div class="input-group">
@@ -29,6 +29,7 @@
           type="text"
           name="firstName"
           id="first-name"
+          ng-model="name.first"
         />
       </div>
       <div class="col">
@@ -38,6 +39,7 @@
           type="text"
           name="lastName"
           id="last-name"
+          ng-model="name.last"
         />
       </div>
     </div>

@@ -7,7 +7,7 @@ angular.module("BookIt").component("bHeader", {
     $scope.user = AuthService.getUser();
     $scope.isAuthenticated = AuthService.isAuthenticated();
     
-    $scope.$on("auth-changed", function () {
+    $scope.$on("user-changed", function () {
       $scope.user = AuthService.getUser();
       $scope.isAuthenticated = AuthService.isAuthenticated();
       $scope.$apply();

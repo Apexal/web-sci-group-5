@@ -67,7 +67,7 @@ router.patch('/me', async function (req, res) {
         return res.status(400).json({ error: 'Failed to update user, some values were invalid.' });
     }
 
-    res.json(req.user);
+    res.json({ user: req.user });
 });
 
 /**
@@ -97,7 +97,7 @@ router.get('/:userID', async function (req, res) {
         return res.status(404).json({ error: 'Could not find user.' });
     }
 
-    res.json(user);
+    res.json({ user });
 });
 
 module.exports = router;

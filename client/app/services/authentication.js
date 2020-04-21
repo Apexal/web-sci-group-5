@@ -14,16 +14,20 @@ angular.module("Authentication")
         user = response.data.user;
         console.log("Logged in");
         authenticated = true;
-        $rootScope.$broadcast("auth-changed");
+        $rootScope.$broadcast("user-changed");
         return user;
       } catch (e) {
         authenticated = false;
         console.log("Logged out");
-        $rootScope.$broadcast("auth-changed");
+        $rootScope.$broadcast("user-changed");
         return null;
       }
-    }
-
+    };
+    service.updateUser = async updates => {
+      const response = await $http.patch("/api/users/me", updates);
+      user = response.data.user;
+      $rootScope.$broadcast("user-changed");
+    };
     service.getUser = () => user;
     service.isAuthenticated = () => authenticated;
 
