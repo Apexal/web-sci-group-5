@@ -6,7 +6,7 @@ angular.module("Stripe")
     const service = {};
     let stripe = null;
 
-    const initalizeWithUser = () => {
+    const initalizeWithUser = function () {
       if (AuthService.isAuthenticated()) {
         stripe = Stripe('pk_test_2AWcc2JXkSdRmMfyuOaIOiT300aORiftsc', {
           stripeAccount: AuthService.getUser().stripeAccountID
