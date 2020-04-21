@@ -17,6 +17,8 @@ const MongoStore = require('connect-mongo')(session);
 
 app.use(cors());
 
+app.use(express.static(path.join(__dirname, '..', 'client', 'app')));
+
 /* Set up session storage */
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -38,7 +40,7 @@ app.use(require('./routes'));
 
 // Send all non-API routes to the HTML file
 app.use(function (req, res) {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, '..', 'client', 'app', 'index.html'));
 });
 
 app.listen(port, () => debug(`Server running on port ${port}: http://localhost:${port}`));
