@@ -1,4 +1,4 @@
-angular.module("myApp").component("bHeader", {
+angular.module("BookIt").component("bHeader", {
     templateUrl: "components/header/header.html",
     bindings: {
     }

@@ -1,7 +1,7 @@
 "use strict";
 
 angular
-  .module("myApp.user_info", ["ngRoute"])
+  .module("BookIt.user_info", ["ngRoute"])
   .config([
     "$routeProvider",
     function($routeProvider) {
