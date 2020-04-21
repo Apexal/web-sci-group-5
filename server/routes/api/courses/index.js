@@ -4,10 +4,13 @@ const debug = require('debug')('api');
 const {JSDOM} = require('jsdom');
 
 const { requireAuth, requireAdmin } = require('../utils');
-const { getPeriods, getCourseFromPeriods } = require('../../../utils/courseScraping');
+const { getPeriods, getCoursesFromPeriods } = require('../../../utils/courseScraping');
 
 const Course = require('./courses.model');
 
+/**
+ * Get all courses stored in the database.
+ */
 router.get('/', async function(req, res) {
     try {
         const courses = await Course.find({});
@@ -27,7 +30,7 @@ router.post('/import', requireAdmin, async function (req, res, next) {
     try {
         const dom = await JSDOM.fromURL(`https://sis.rpi.edu/reg/zs${termCode}.htm`)
         const periods = getPeriods(dom.window.document, termCode);
-        const courses = getCourseFromPeriods(periods, termCode);
+        const courses = getCoursesFromPeriods(periods, termCode);
     
         return res.json(courses);
     } catch (e) {

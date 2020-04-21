@@ -92,7 +92,7 @@ function getPeriods(document, termCode) {
  * @param {String} termCode Term code from SIS
  * @returns {Object[]} Array of courses with sections and periods
  */
-function getCourseFromPeriods(periods, termCode) {
+function getCoursesFromPeriods(periods, termCode) {
     const courses = []
 
     for (const period of periods) {
@@ -131,4 +131,4 @@ function getCourseFromPeriods(periods, termCode) {
     return courses
 }
 
-module.exports = { getPeriods, getCourseFromPeriods }
+module.exports = { getPeriods, getCoursesFromPeriods }
