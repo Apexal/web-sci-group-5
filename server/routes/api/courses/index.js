@@ -31,7 +31,19 @@ router.post('/import', requireAdmin, async function (req, res, next) {
         const dom = await JSDOM.fromURL(`https://sis.rpi.edu/reg/zs${termCode}.htm`)
         const periods = getPeriods(dom.window.document, termCode);
         const courses = getCoursesFromPeriods(periods, termCode);
-    
+        
+        // Save to database
+        Promise.allSettled(courses.map(async course => {
+            // Update or create
+            let existingCourse = await Course.findOne({ termCode, subjectCode: course.subjectCode, number: course.number });
+            if (!existingCourse) {
+                existingCourse = new Course(course);
+            } else {
+                existingCourse.set(course);
+            }
+            return existingCourse.save(); 
+        }));
+
         return res.json(courses);
     } catch (e) {
         debug(e);
