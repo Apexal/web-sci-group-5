@@ -28,10 +28,10 @@ router.get('/', async function (req, res) {
  * Get the current logged in user.
  * 
  * **Response JSON**
- * - logged in user document
+ * - user: logged in user document
  */
 router.get('/me', function (req, res) {
-    res.json(req.user);
+    res.json({ user: req.user });
 });
 
 /**

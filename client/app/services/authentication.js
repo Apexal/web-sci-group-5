@@ -2,7 +2,7 @@
 
 angular.module("Authentication")
   .factory("AuthService",
-  ["$http", function ($http) {
+  ["$rootScope", "$http", function ($rootScope, $http) {
     const service = {};
     let user = null;
     let authenticated = false;
@@ -12,18 +12,20 @@ angular.module("Authentication")
       try {
         const response = await $http.get("/api/users/me");
         user = response.data.user;
+        console.log("Logged in");
         authenticated = true;
+        $rootScope.$broadcast("auth-changed");
         return user;
       } catch (e) {
         authenticated = false;
+        console.log("Logged out");
+        $rootScope.$broadcast("auth-changed");
         return null;
       }
     }
 
     service.getUser = () => user;
     service.isAuthenticated = () => authenticated;
-
-    // service.fetchUser();
 
     return service;
   }]);

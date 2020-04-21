@@ -11,8 +11,9 @@ angular
       });
     }
   ])
-  .controller("ListingCtrl", ['$scope', 'TextbookListingsService', function($scope, textbookListingsService) {
+  .controller("ListingCtrl", ["$scope", "TextbookListingsService", function($scope, textbookListingsService) {
     $scope.text = 'asdasd';
+    
     $scope.textbookListings = [];
     textbookListingsService.fetchTextbookListings()
       .then(listings => {
