@@ -15,14 +15,13 @@ angular
     $scope.user = AuthService.getUser();
     $scope.name = $scope.user.name;
 
-    $scope.isAuthenticated = AuthService.isAuthenticated();
-    
-    $scope.$on("user-changed", function () {
+    const userUpdate = function () {
       $scope.user = AuthService.getUser();
-      $scope.isAuthenticated = AuthService.isAuthenticated();
       $scope.name = $scope.user.name;
       $scope.$apply();
-    });
+    }
+    
+    $scope.$on("user-changed", userUpdate);
 
     $scope.submitForm = function (event) {
       AuthService.updateUser({ name: $scope.name });
