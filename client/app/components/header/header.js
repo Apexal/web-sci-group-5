@@ -10,6 +10,5 @@ angular.module("BookIt").component("bHeader", {
     $scope.$on("user-changed", function () {
       $scope.user = AuthService.getUser();
       $scope.isAuthenticated = AuthService.isAuthenticated();
-      $scope.$apply();
     });
   }]);

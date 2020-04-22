@@ -45,6 +45,27 @@
     </div>
 
     <hr />
+    <h2 class="subtitle">Your Courses</h2>
+    <div class="form-group">
+      <input
+        ng-model="search"
+        ng-model-options="{ debounce: 1000 }"
+        type="text"
+        class="form-control"
+        placeholder="Search by crn, course title, or subject code and number"
+      />
+
+      <ul class="list-group">
+        <li ng-repeat="course in courses" class="list-group-item d-flex">
+          <span class="flex-grow-1">
+            <strong>{{ course.subjectCode }}-{{ course.number }}</strong> {{
+            course.title }}
+          </span>
+          <button class="btn btn-small btn-success" type="button">Add</button>
+        </li>
+      </ul>
+    </div>
+    <hr />
     <button type="submit" class="btn btn-primary">Save</button>
   </form>
 </div>

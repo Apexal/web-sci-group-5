@@ -20,10 +20,18 @@ const Course = require('./courses.model');
 router.get('/', async function(req, res) {
     const query = {};
 
-    if ('termCode' in req.body) {
+    if ('termCode' in req.query) {
         query.termCode = req.query.termCode;
     }
 
+    if ('search' in req.query) {
+        query.$or = [
+            {
+                title: { $regex: req.query.search, $options: 'i' }
+            }
+        ]
+    }
+    
     try {
         const courses = await Course.find(query);
         res.json({ courses });

@@ -14,8 +14,7 @@ angular
   .controller("ListingCtrl", ["$scope", "TextbookListingsService", function($scope, textbookListingsService) {
     $scope.textbookListings = [];
     textbookListingsService.fetchTextbookListings()
-    .then(listings => {
-      $scope.textbookListings = listings;
-        $scope.$apply();
+      .then(listings => {
+        $scope.textbookListings = listings;
       });
   }]);
