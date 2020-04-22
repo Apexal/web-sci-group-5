@@ -50,7 +50,7 @@ router.post('/', requireAuth, async function (req, res) {
 
     // Validate presence of request
     if (!textbookID || !condition || !proposedPrice) {
-        return res.status(400).json({ error: 'Invalid request body. Be sure to pass `textbookID`, `condition`, and `proposedPrice`.' })
+        return res.status(400).json({ error: 'Invalid request body. Be sure to pass `textbookID`, `condition`, and `proposedPrice`.' });
     }
 
     // Find textbook

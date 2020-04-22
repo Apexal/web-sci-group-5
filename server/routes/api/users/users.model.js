@@ -23,12 +23,12 @@ schema.set('toObject', { getters: true, virtuals: true });
 schema.set('toJSON', { getters: true, virtuals: true });
 
 schema.virtual('displayName').get(function () {
-    let message = "";
+    let message = '';
 
-    if (this.admin) message += "Admin ";
+    if (this.admin) message += 'Admin ';
 
     if (this.name.first || this.name.last) {
-        message += this.name.first + " " + this.name.last;
+        message += this.name.first + ' ' + this.name.last;
     } else {
         message += this.username;
     }

@@ -13,7 +13,7 @@ const schema = new Schema(
         authors: { type: String, required: true, minlength: 1, maxlength: 100 },
         pageCount: { type: Number, minlength: 1 },
         publisher: { type: String, required: true, minlength: 1, maxlength: 100 },
-        edition: { type: String, required: true, default: "1st" },
+        edition: { type: String, required: true, default: '1st' },
         retailPrice: { type: Number }
     },
     {
