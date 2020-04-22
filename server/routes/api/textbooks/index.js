@@ -28,11 +28,12 @@ router.get('/', async function (req, res) {
 async function updateTextbookFromGoogleBooksAPI (textbook) {
     const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${textbook.isbn}&key=${process.env.GOOGLE_API_KEY}`);
     const data = await response.json();
+    if (data.totalItems > 0) {
+        const volumeInfo = data.items[0].volumeInfo;
     
-    const volumeInfo = data.items[0].volumeInfo;
-
-    textbook.set(volumeInfo);
-    textbook.authors = volumeInfo.authors.join(', ');
+        textbook.set(volumeInfo);
+        textbook.authors = volumeInfo.authors.join(', ');
+    }
 
     return textbook;
 }
@@ -55,7 +56,12 @@ router.get('/isbnimport', async function (req, res) {
         debug(`Failed to update textbook ${textbook._id} from Google Books API: ${e}`);
     }
 
-    await textbook.save();
+    try {
+        await textbook.save();
+    } catch (e) {
+        debug(`Failed to import textbook with ISBN ${isbn}: ${e}`);
+        return res.status(400).json({ error: 'Failed to import this textbook. It may not have been found.' });
+    }
 
     res.json({ textbook });
 });
@@ -201,21 +207,17 @@ router.post('/import', requireAdmin, async (req, res) => {
         // Add all textbooks to the database if they aren't stored yet
         const textbooks = [];
         coursesInfo.forEach(course => (
-            course.textbooks && course.textbooks.forEach(async (textbook) => {
-                try {
-                    let tb = await Textbook.findOne({ isbn: textbook.isbn });
-                    if (!tb) {
-                        tb = new Textbook(textbook);
-                    }
-                    try {
-                        await updateTextbookFromGoogleBooksAPI(tb);
-                    } catch (e) {
-                        debug(`Failed to update textbook ${tb._id} from Google Books API: ${e}`);
-                    }
-                    textbooks.push(tb.save());
-                } catch (e) {
-                    debug(e);
-                }
+            course.textbooks && course.textbooks.forEach((textbook) => {
+                
+                textbooks.push(
+                    Textbook.findOne({ isbn: textbook.isbn }).then(async tb => {
+                        if (!tb) {
+                            tb = new Textbook(textbook);
+                        }
+                        return updateTextbookFromGoogleBooksAPI(tb);
+                    })
+                    .then(tb => tb.save())
+                )
             })
         ));
 
