@@ -37,3 +37,8 @@
   position: sticky;
   top: 10px;
 }
+
+/* LISTING DETAIL */
+.listing-detail-table tr td:first-child {
+  font-weight: bold;
+}

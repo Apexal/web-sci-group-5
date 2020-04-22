@@ -12,5 +12,9 @@ angular
     }
   ])
   .controller("ListingDetailCtrl", ["$scope", "$routeParams", "TextbookListingsService", function ($scope, $routeParams, textbookListingsService) {
-    alert(JSON.stringify($routeParams));
+    $scope.listing = null;
+    textbookListingsService.fetchTextbookListingById($routeParams.listingID)
+      .then(textbookListing => {
+        $scope.listing = textbookListing;
+      })
   }]);

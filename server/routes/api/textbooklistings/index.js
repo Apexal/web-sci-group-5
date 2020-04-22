@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const debug = require('debug')('api');
 
-const { requireAuth, requireAdmin } = require('../utils');
+const { USER_POPULATE_PROPERTIES, requireAuth, requireAdmin } = require('../utils');
 
 const Textbook = require('../textbooks/textbooks.model');
 const TextbookListing = require('./textbooklistings.model');
@@ -26,7 +26,10 @@ router.get('/', async function (req, res) {
     }
 
     try {
-        const textbookListings = await TextbookListing.find(query).populate('_textbook');
+        const textbookListings = await TextbookListing
+            .find(query)
+            .populate('_textbook')
+            .populate('_user', USER_POPULATE_PROPERTIES);
         res.json({ textbookListings });
     } catch (e) {
         debug(e);
@@ -90,7 +93,10 @@ async function getTextbookListingMiddleware(req, res, next) {
     const textbookListingID = req.params.textbookListingID;
 
     try {
-        res.locals.textbookListing = await TextbookListing.findById(textbookListingID);
+        res.locals.textbookListing = await TextbookListing
+            .findById(textbookListingID)
+            .populate('_textbook')
+            .populate('_user', USER_POPULATE_PROPERTIES);
     } catch (e) {
         debug(e);
         return res.status(500).json({ error: 'Could not get textbook listing.' });

@@ -6,7 +6,7 @@ const { stripe } = require('../../../stripe');
 
 const User = require('./users.model');
 
-const USER_PROPERTIES = '_id username name';
+const { USER_POPULATE_PROPERTIES } = require('../utils');
 
 /**
  * Gets all users with limited properties.
@@ -17,7 +17,7 @@ const USER_PROPERTIES = '_id username name';
 router.get('/', async function (req, res) {
     try {
         const users = await User.find({})
-            .select(USER_PROPERTIES)
+            .select(USER_POPULATE_PROPERTIES)
             .populate('_courses');
         res.json(users);
     } catch (e) {

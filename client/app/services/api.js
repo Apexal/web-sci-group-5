@@ -9,6 +9,13 @@ angular.module("BookItAPI")
         return response.data.textbookListings;
       });
     }
+    
+    /** Fetch textbooklistings from the server */
+    service.fetchTextbookListingById = function (id) {
+      return $http.get('/api/textbooklistings/' + id).then(function(response) {
+        return response.data.textbookListing;
+      });
+    }
 
     service.getTextbookListings = () => listings;
 
