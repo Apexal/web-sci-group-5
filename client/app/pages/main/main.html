@@ -1,50 +1,66 @@
 <div class="main-container container">
-	<section>
-		<h1 class="title">Welcome to BookIt!</h1>
-		<h2 class="subtitle">The hub to find all of your books cheaper than anywhere else!</h2>
+  <section>
+    <h1 class="title">Welcome to BookIt!</h1>
+    <h2 class="subtitle">
+      The hub to find all of your books cheaper than anywhere else!
+    </h2>
 
-		<div class="m-3">
-			<h3 ng-if="textbookListings.length" class="main-listings-title">
-				Here are some of the most recent listings by our sellers:
-			</h3>
-			<h3 ng-if="!textbookListings.length" class="main-listings-title">
-				There are currently no textbook listings.
-			</h3>
-			<a ng-if="!textbookListings.length" class="btn btn-outline-success" href="/#!/listing/new"
-				>Add the first one yourself!</a
-			>
+    <div class="m-3">
+      <h3 ng-if="textbookListings.length" class="main-listings-title">
+        Here are some of the most recent listings by our sellers:
+      </h3>
+      <h3 ng-if="!textbookListings.length" class="main-listings-title">
+        There are currently no textbook listings.
+      </h3>
+      <a
+        ng-if="!textbookListings.length"
+        class="btn btn-outline-success"
+        href="/listing/new"
+        >Add the first one yourself!</a
+      >
 
-			<div class="row row-cols-1 row-cols-md-2">
-				<div class="col mb-3" ng-repeat="listing in textbookListings">
-					<article class="card border-success h-100" style="max-width: 540px;">
-						<div class="row no-gutters">
-							<div class="col-md-4">
-								<img ng-src="{{ listing._textbook.image }}" class="card-img" alt="{{ listing._textbook.title }}" />
-							</div>
-							<div class="col-md-8">
-								<div class="card-body">
-									<p class="card-text">
-										<small class="text-muted">
-											Posted {{ getDate(listing.createdAt) }}
-											<ng-pluralize count="{{getDate(listing.createdAt)}}" when="{'one': 'day ', 'other': 'days '}">
-											</ng-pluralize>
-											ago
-										</small>
-									</p>
-									<h5 class="card-title">{{ listing._textbook.title }}</h5>
-									<p class="card-text">
-										{{ listing.proposedPrice | currency }}
-										<span class="badge badge-success">{{ listing.condition }}</span>
-									</p>
-									<p class="card-text">
-										<a class="btn btn-outline-success" href="/#!/listing">Buy now</a>
-									</p>
-								</div>
-							</div>
-						</div>
-					</article>
-				</div>
-			</div>
-		</div>
-	</section>
+      <div class="row row-cols-1 row-cols-md-2">
+        <div class="col mb-3" ng-repeat="listing in textbookListings">
+          <article class="card border-success h-100" style="max-width: 540px;">
+            <div class="row no-gutters">
+              <div class="col-md-4">
+                <img
+                  ng-src="{{ listing._textbook.image }}"
+                  class="card-img"
+                  alt="{{ listing._textbook.title }}"
+                />
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <p class="card-text">
+                    <small class="text-muted">
+                      Posted {{ getDate(listing.createdAt) }}
+                      <ng-pluralize
+                        count="{{getDate(listing.createdAt)}}"
+                        when="{'one': 'day ', 'other': 'days '}"
+                      >
+                      </ng-pluralize>
+                      ago
+                    </small>
+                  </p>
+                  <h5 class="card-title">{{ listing._textbook.title }}</h5>
+                  <p class="card-text">
+                    {{ listing.proposedPrice | currency }}
+                    <span class="badge badge-success"
+                      >{{ listing.condition }}</span
+                    >
+                  </p>
+                  <p class="card-text">
+                    <a class="btn btn-outline-success" href="/listing"
+                      >Buy now</a
+                    >
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>

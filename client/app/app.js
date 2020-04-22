@@ -14,6 +14,7 @@ angular
     "BookIt.main",
     "BookIt.user_info",
     "BookIt.listing",
+    "BookIt.listing_detail",
     "BookIt.new_listing",
     "BookIt.version",
   ])
@@ -21,7 +22,8 @@ angular
     "$locationProvider",
     "$routeProvider",
     function($locationProvider, $routeProvider) {
-      $locationProvider.hashPrefix("!");
+      $locationProvider.html5Mode(true);
+      $locationProvider.hashPrefix('!');
 
       $routeProvider.otherwise({ redirectTo: "/main" });
     }
