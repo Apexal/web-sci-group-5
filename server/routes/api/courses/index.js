@@ -28,6 +28,9 @@ router.get('/', async function(req, res) {
         query.$or = [
             {
                 title: { $regex: req.query.search, $options: 'i' }
+            },
+            {
+                'sections.crn': req.query.search
             }
         ]
     }
