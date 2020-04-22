@@ -87,7 +87,16 @@
                 ng-repeat="course in user._courses track by course._id"
                 class="list-group-item d-flex"
               >
-                {{ course.title }}
+                <span class="flex-grow-1">
+                  {{ course.title }}
+                </span>
+                <button
+                  ng-click="removeCourse(course._id)"
+                  class="btn btn-small btn-danger"
+                  type="button"
+                >
+                  X
+                </button>
               </li>
             </ul>
           </div>

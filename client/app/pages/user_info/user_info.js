@@ -39,6 +39,12 @@ angular
 
       AuthService.updateUser({ _courses: newCourseIDs });
     };
+    
+    $scope.removeCourse = function (courseID) {
+      const newCourseIDs = $scope.user._courses.map(c => c._id).filter(id => id !== courseID);
+
+      AuthService.updateUser({ _courses: newCourseIDs });
+    };
 
     $scope.$on("user-changed", function () {
       $scope.user = AuthService.getUser();
