@@ -3,6 +3,8 @@ const router = express.Router();
 const got = require('got');
 const debug = require('debug')('api');
 
+const fetch = require('node-fetch');
+
 const { requireAuth, requireAdmin } = require('../utils');
 
 const Textbook = require('./textbooks.model');
@@ -22,6 +24,33 @@ router.get('/', async function (req, res) {
         res.status(500).json({ error: 'There was an error getting all textbooks.' });
     }
 });
+
+router.get('/isbnimport', async function (req, res) {
+    const { isbn } = req.query;
+
+    if (!isbn) return res.status(400).json({ error: 'No ISBN was given in the url! e.g `/isbnimport?isbn=123456789`' })
+
+    const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&key=${process.env.GOOGLE_API_KEY}`);
+    const data = await response.json();
+
+    const volumeInfo = data.items[0].volumeInfo;
+
+    // Find existing textbook
+    let textbook = await Textbook.findOne({ isbn });
+    if (!textbook) {
+        textbook = new Textbook({
+            isbn
+        });
+    }
+
+    textbook.set(volumeInfo);
+    textbook.authors = volumeInfo.authors.join(', ');
+
+    await textbook.save();
+
+    res.json({ textbook });
+});
+
 
 /**
  * Middleware to find a Textbook from the request parameter 'textbookID'.
