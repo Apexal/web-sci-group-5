@@ -62,9 +62,13 @@ passport.serializeUser(function (user, done) {
     done(null, user.username);
 });
 
-passport.deserializeUser(async function (username, done) {
-    const user = await User.findOne({ username });
-    return done(null, user);
+passport.deserializeUser(function (username, done) {
+    return User.findOne({ username })
+        .populate('_courses')
+        .then(user => {
+            return done(null, user);
+        })
+        .catch(done);
 });
 
 module.exports = router;

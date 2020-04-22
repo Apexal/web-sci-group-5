@@ -16,7 +16,9 @@ const USER_PROPERTIES = '_id username name';
  */
 router.get('/', async function (req, res) {
     try {
-        const users = await User.find({}).select(USER_PROPERTIES);
+        const users = await User.find({})
+            .select(USER_PROPERTIES)
+            .populate('_courses');
         res.json(users);
     } catch (e) {
         debug(e);
@@ -60,13 +62,19 @@ router.patch('/me', async function (req, res) {
     if (req.body.name) {
         req.user.name = req.body.name;
     }
+    if (req.body._courses) {
+        req.user._courses = Array.from(new Set(req.body._courses));
+    }
+    
     try {
+        await req.user.populate('_courses').execPopulate();
         await req.user.save();
     } catch (e) {
         debug(e);
         return res.status(400).json({ error: 'Failed to update user, some values were invalid.' });
     }
 
+    debug(`Patched profile for ${req.user.username}`);
     res.json({ user: req.user });
 });
 
@@ -85,7 +93,9 @@ router.get('/:userID', async function (req, res) {
     let user;
     try {
         // Try to find user by ID, this fails if userID is not a valid ObjectID
-        user = await User.findById(userID).select();
+        user = await User.findById(userID)
+            .select()
+            .populate('_courses');
     } catch (e) {
         debug(e);
         return res.status(500).json({ error: 'Could not get user.' });
