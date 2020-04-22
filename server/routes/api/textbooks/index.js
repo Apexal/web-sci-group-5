@@ -25,15 +25,22 @@ router.get('/', async function (req, res) {
     }
 });
 
+async function updateTextbookFromGoogleBooksAPI (textbook) {
+    const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${textbook.isbn}&key=${process.env.GOOGLE_API_KEY}`);
+    const data = await response.json();
+    
+    const volumeInfo = data.items[0].volumeInfo;
+
+    textbook.set(volumeInfo);
+    textbook.authors = volumeInfo.authors.join(', ');
+
+    return textbook;
+}
+
 router.get('/isbnimport', async function (req, res) {
     const { isbn } = req.query;
 
     if (!isbn) return res.status(400).json({ error: 'No ISBN was given in the url! e.g `/isbnimport?isbn=123456789`' })
-
-    const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&key=${process.env.GOOGLE_API_KEY}`);
-    const data = await response.json();
-
-    const volumeInfo = data.items[0].volumeInfo;
 
     // Find existing textbook
     let textbook = await Textbook.findOne({ isbn });
@@ -42,9 +49,11 @@ router.get('/isbnimport', async function (req, res) {
             isbn
         });
     }
-
-    textbook.set(volumeInfo);
-    textbook.authors = volumeInfo.authors.join(', ');
+    try {
+        await updateTextbookFromGoogleBooksAPI(textbook);
+    } catch (e) {
+        debug(`Failed to update textbook ${textbook._id} from Google Books API: ${e}`);
+    }
 
     await textbook.save();
 
@@ -194,12 +203,16 @@ router.post('/import', requireAdmin, async (req, res) => {
         coursesInfo.forEach(course => (
             course.textbooks && course.textbooks.forEach(async (textbook) => {
                 try {
-                    const found = await Textbook.findOne({ isbn: textbook.isbn });
-                    if (!found) {
-                        console.log(textbook);
-                        const book = new Textbook(textbook);
-                        textbooks.push(book.save());
+                    let tb = await Textbook.findOne({ isbn: textbook.isbn });
+                    if (!tb) {
+                        tb = new Textbook(textbook);
                     }
+                    try {
+                        await updateTextbookFromGoogleBooksAPI(tb);
+                    } catch (e) {
+                        debug(`Failed to update textbook ${tb._id} from Google Books API: ${e}`);
+                    }
+                    textbooks.push(tb.save());
                 } catch (e) {
                     debug(e);
                 }
@@ -207,9 +220,9 @@ router.post('/import', requireAdmin, async (req, res) => {
         ));
 
         // Ensure all requests to save textbooks to the database are resolved
-        await Promise.all(textbooks);
+        const textbookDocuments = await Promise.all(textbooks);
 
-        return res.json(coursesInfo);
+        return res.json({ coursesInfo, textbooks: textbookDocuments });
     } catch (e) {
         debug(e);
         return res.status(500).json({ error: 'Server error' });
