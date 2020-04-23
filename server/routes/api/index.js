@@ -13,5 +13,6 @@ router.use('/users', requireAuth, require('./users'));
 router.use('/courses', require('./courses'));
 router.use('/textbooks', require('./textbooks'));
 router.use('/textbooklistings', require('./textbooklistings'));
+router.use('/stripe', requireAuth, require('./stripe'));
 
 module.exports = router;

@@ -9,11 +9,11 @@ angular.module("Stripe")
 
     const initalizeWithUser = function () {
       if (AuthService.isAuthenticated()) {
-        stripe = Stripe('pk_test_2AWcc2JXkSdRmMfyuOaIOiT300aORiftsc', {
+        stripe = Stripe('pk_test_2AWcc2JXkSdRmMfyuOaIOiT300aORiftsc', /*/{
           stripeAccount: AuthService.getUser().stripeAccountID
-        });
+        }*/);
         elements = stripe.elements();
-        console.log("Initialized Stripe");
+        console.log("Initialized Stripe and elements");
       } else {
         stripe = null;
         elements = null;
@@ -22,7 +22,8 @@ angular.module("Stripe")
 
     $rootScope.$on("user-changed", initalizeWithUser);
 
-    service.elements = elements;
+    service.stripe = () => stripe;
+    service.elements = () => elements;
 
     return service;
   }]);

@@ -65,7 +65,7 @@ router.patch('/me', async function (req, res) {
     if (req.body._courses) {
         req.user._courses = Array.from(new Set(req.body._courses));
     }
-    
+
     try {
         await req.user.populate('_courses').execPopulate();
         await req.user.save();

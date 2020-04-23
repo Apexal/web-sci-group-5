@@ -23,7 +23,7 @@ module.exports.checkoutTextbookListing = async function checkoutTextbookListing 
     payment_method_types: ['card'],
     application_fee_amount: fee,
     transfer_data: {
-      destination: textbookListing._user.stripeAccount,
+      destination: textbookListing._user.stripeAccountID,
     },
     amount: textbookListing.proposedPrice * 100,
     currency: 'usd',
