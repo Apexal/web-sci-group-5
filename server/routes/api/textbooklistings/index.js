@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const debug = require('debug')('api');
 
+const { checkoutTextbookListing } = require('../../../stripe');
+
 const { USER_POPULATE_PROPERTIES, requireAuth, requireAdmin } = require('../utils');
 
 const Textbook = require('../textbooks/textbooks.model');
@@ -121,6 +123,11 @@ async function getTextbookListingMiddleware(req, res, next) {
  */
 router.get('/:textbookListingID', requireAuth, getTextbookListingMiddleware, async function (req, res) {
     res.json({ textbookListing: res.locals.textbookListing });
+});
+
+router.post('/:textbookListingID/checkout', requireAuth, getTextbookListingMiddleware, async function (req, res) {
+    const intent = await checkoutTextbookListing(req.user, res.locals.textbookListing);
+    res.status(201).json({ clientSecret: intent.client_secret });
 });
 
 /**
