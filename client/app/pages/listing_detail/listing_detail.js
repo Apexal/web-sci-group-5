@@ -16,5 +16,13 @@ angular
     textbookListingsService.fetchTextbookListingById($routeParams.listingID)
       .then(textbookListing => {
         $scope.listing = textbookListing;
-      })
+      });
+    
+    $scope.checkingOut = false;
+    $scope.checkout = function () {
+      textbookListingsService.checkoutTextbookListing.then(clientSecret => {
+        $scope.checkingOut = true;
+        
+      });
+    };
   }]);
