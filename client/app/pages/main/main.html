@@ -47,12 +47,22 @@
                   <p class="card-text">
                     {{ listing.proposedPrice | currency }}
                     <span class="badge badge-success"
-                      >{{ listing.condition }}</span
+                      >{{ listing.condition }} condition</span
                     >
                   </p>
                   <p class="card-text">
-                    <a class="btn btn-outline-success" href="/listing"
-                      >Buy now</a
+                    <a
+                      ng-if="isAuthenticated"
+                      href="/listing/{{listing._id}}"
+                      class="btn btn-primary text-capitalize"
+                      >Buy</a
+                    >
+                    <a
+                      ng-if="!isAuthenticated"
+                      href="/login"
+                      target="_self"
+                      class="btn btn-primary text-capitalize"
+                      >Login to Buy</a
                     >
                   </p>
                 </div>

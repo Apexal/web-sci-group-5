@@ -11,7 +11,16 @@ angular
       });
     }
   ])
-  .controller("MainCtrl", ["$scope", "TextbookListingsService", function ($scope, textbookListingsService) {
+  .controller("MainCtrl", ["$scope", "AuthService", "TextbookListingsService", function ($scope, AuthService, textbookListingsService) {
+    $scope.user = AuthService.getUser();
+    $scope.isAuthenticated = AuthService.isAuthenticated();
+    $scope.$on("user-changed", function () {
+      console.log("teer");
+      $scope.user = AuthService.getUser();
+      $scope.isAuthenticated = AuthService.isAuthenticated();
+      $scope.$apply();
+    });
+
     $scope.getDate = function (createdAt) {
       const now = new Date();
       const creation = new Date(createdAt);
@@ -25,6 +34,5 @@ angular
     textbookListingsService.fetchTextbookListings()
       .then(listings => {
         $scope.textbookListings = listings;
-        $scope.$apply();
       });
   }]);
