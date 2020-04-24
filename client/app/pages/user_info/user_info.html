@@ -49,7 +49,7 @@
     <div class="form-group">
       <input
         ng-model="search"
-        ng-model-options="{ debounce: 1000 }"
+        ng-model-options="{ debounce: 500 }"
         type="text"
         class="form-control"
         placeholder="Search by crn, course title, or subject code and number"
@@ -58,6 +58,15 @@
       <div class="row">
         <div class="col">
           <h2 class="subtitle">Browse</h2>
+          <p ng-if="search.length === 0" class="text-secondary">
+            Search above!
+          </p>
+          <p
+            ng-if="search.length > 0 && courses.length === 0"
+            class="text-secondary"
+          >
+            No search results for <strong>{{search}}</strong>
+          </p>
           <ul class="list-group">
             <li
               ng-repeat="course in courses track by course._id"
@@ -88,6 +97,7 @@
                 class="list-group-item d-flex"
               >
                 <span class="flex-grow-1">
+                  <strong>{{ course.subjectCode }}-{{ course.number }}</strong>
                   {{ course.title }}
                 </span>
                 <button
