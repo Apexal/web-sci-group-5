@@ -71,31 +71,28 @@
     </div>
 
     <div class="modal" tabindex="-1" role="dialog" id="payment-modal">
-      <div class="modal-dialog" role="document">
+      <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Finish Payment</h5>
+            <h5 class="modal-title">
+              Finish Payment of ${{listing.proposedPrice}}
+            </h5>
           </div>
           <div class="modal-body">
             <form id="payment-form" ng-submit="finishPayment()">
               <div id="card-element"></div>
 
               <div id="card-errors" role="alert"></div>
-
+              <hr />
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Cancel
+              </button>
               <button class="btn btn-primary">Pay</button>
             </form>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-dismiss="modal"
-            >
-              Cancel
-            </button>
-            <button form="payment-form" type="button" class="btn btn-primary">
-              Pay
-            </button>
           </div>
         </div>
       </div>
