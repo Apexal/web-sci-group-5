@@ -16,7 +16,7 @@
         ng-repeat="listing in textbookListings"
         class="col-12 col-sm-6 col-md-3"
       >
-        <div class="card animated zoomIn textbook-listing-card">
+        <div class="card animated zoomIn textbook-listing-card my-2">
           <div class="card-img-holder">
             <span class="badge badge-warning card-condition"
               >{{ listing.condition }}</span
@@ -34,13 +34,13 @@
             <h5 class="card-title">
               {{ listing._textbook.title }}
             </h5>
-            <p class="card-text">Needed for <strong>[COURSE(S)]</strong></p>
+            <!-- <p class="card-text">Needed for <strong>[COURSE(S)]</strong></p> -->
             <a
               href="/listing/{{listing._id}}"
               class="btn btn-primary text-capitalize"
               >Buy</a
             >
-            <a href="#" class="btn btn-danger text-capitalize">Sell</a>
+            <!-- <a href="#" class="btn btn-danger text-capitalize">Sell</a> -->
           </div>
         </div>
       </div>
